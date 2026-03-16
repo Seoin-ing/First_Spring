@@ -1,10 +1,13 @@
 package com.example.demo;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 public class HelloController {
@@ -38,5 +41,20 @@ public class HelloController {
     @GetMapping("/members")
     public java.util.List<Member> getMembers() {
         return memberRepository.findAll();
+    }
+
+    @PutMapping("/member/{id}")
+    public Member updatMember(@PathVariable Long id, @RequestBody Member member) {
+        //TODO: process PUT request
+        Member existing = memberRepository.findById(id).orElseThrow();
+        existing.setName(member.getName());
+        existing.setAge(member.getAge());
+        return memberRepository.save(existing);
+    }
+
+    @DeleteMapping("/member/{id}")
+    public String deleteMember(@PathVariable Long id) {
+        memberRepository.deleteById(id);
+        return "삭제 완료";
     }
 }
